@@ -21,6 +21,7 @@ class BasicControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injectin
   implicit lazy val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   val mockDataRepository: DataRepository = mock[DataRepository]
 
+
   object testController extends BasicController(
     controllerComponents,
     mockDataRepository,
@@ -32,9 +33,6 @@ class BasicControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injectin
     true,
     "BMW"
   )
- // def status(of: Action[AnyContent]): Int = of.header.status
-
-
 
   "BasicController .getOneVehicle" should {
 
@@ -55,6 +53,15 @@ class BasicControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injectin
   }
 
   "return NotFound" when {
+
+    "unexpected vehicle name submitted" in {
+
+      when(mockDataRepository.getVehicle(any[String]))
+        .thenReturn(None)
+
+      val result = testController.getOneVehicle("aahjhj")(FakeRequest())
+      status(result) mustBe (Status.NOT_FOUND)
+    }
 
 
   }
