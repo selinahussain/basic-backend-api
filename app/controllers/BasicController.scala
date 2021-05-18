@@ -22,6 +22,15 @@ case class BasicController @Inject()(val controllerComponents: ControllerCompone
       }
     }
 
+  def recieveForm() = Action {implicit request =>
+
+    val vehicle = dataRepository.getVehicle("BMW")
+    vehicle match {
+      case Some(Vehicle(wheels,heavy,name)) => Ok(Json.toJson(vehicle.get))
+      case _ =>  NotFound("Vehicle not found")
+    }
+  }
+
 }
 
 
