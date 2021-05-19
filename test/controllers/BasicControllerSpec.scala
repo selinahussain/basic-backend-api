@@ -66,4 +66,6 @@ class BasicControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injectin
 
   }
 
+
+
 }

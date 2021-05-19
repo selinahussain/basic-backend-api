@@ -22,9 +22,11 @@ case class BasicController @Inject()(val controllerComponents: ControllerCompone
       }
     }
 
-  def recieveForm() = Action {implicit request =>
+  def receiveForm(): Action[AnyContent] = Action {implicit request =>
+    val jsonReceived =request.body.asJson.get
+    val name = (jsonReceived \ "Vehicle Name").as[String]
+    val vehicle = dataRepository.getVehicle(name)
 
-    val vehicle = dataRepository.getVehicle("BMW")
     vehicle match {
       case Some(Vehicle(wheels,heavy,name)) => Ok(Json.toJson(vehicle.get))
       case _ =>  NotFound("Vehicle not found")
