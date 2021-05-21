@@ -7,5 +7,5 @@ case class Vehicle(wheels: Int ,
                      name: String)
 
 object Vehicle {
-  implicit val formats = Json.format[Vehicle]
+  implicit val format = Json.format[Vehicle]
 }
