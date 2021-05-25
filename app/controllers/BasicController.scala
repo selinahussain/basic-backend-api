@@ -1,6 +1,6 @@
 package controllers
 
-import models.{ Vehicle}
+import models.Vehicle
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import play.api.mvc.Results.Ok
 
@@ -15,27 +15,30 @@ import scala.concurrent.ExecutionContext.Implicits.global
 case class BasicController @Inject()(controllerComponents: ControllerComponents,
                                      dataRepository: DataRepository, ec: ExecutionContext) extends BaseController {
 
-//    def getOneVehicle(vehicleName: String): Action[AnyContent] = Action { implicit request =>
-//
-//      val vehicle = dataRepository.getVehicle(vehicleName)
-//      vehicle match {
-//        case Some(Vehicle(wheels,heavy,name)) => Ok(Json.toJson(vehicle.get))
-//        case _ =>  NotFound("Vehicle not found")
-//      }
-//    }
+  def getOneVehicle(vehicleName: String): Action[AnyContent] = Action.async { implicit request =>
 
-  def receiveForm(): Action[AnyContent] = Action{implicit request =>
+    dataRepository.getVehicle(vehicleName).map(vehicle =>
+      Ok(Json.toJson(vehicle.head))) recover {
+      case _ => NotFound("Vehicle not found")
+    }
+  }
+
+
+
+  def receiveForm(): Action[AnyContent] = Action.async{implicit request =>
     val jsonReceived =request.body.asJson
+
     val vehicleNameFromJsonReceived = jsonReceived match {
       case Some(value) => jsonReceived.get.\("Vehicle Name").as[String]
-      case None => "test"
+      case None => ""
     }
-    val vehicle = dataRepository.getVehicle(vehicleNameFromJsonReceived)
-    println("aaa" + vehicle.getClass)
 
-    vehicle match {
-      case Vehicle(wheels,heavy,name) => Ok(Json.toJson(vehicle)
-      case _ =>  NotFound
+    dataRepository.getVehicle(vehicleNameFromJsonReceived).map(items => {
+      Ok(Json.toJson(items.head))}) recover {
+      case _ => InternalServerError(Json.obj(
+        "message" -> "error receiving item from mongo"
+
+      ))
     }
   }
 
@@ -48,11 +51,11 @@ case class BasicController @Inject()(controllerComponents: ControllerComponents,
     }
   }
 
-  def findAll(): Action[AnyContent] = Action.async { implicit request =>
-
-    dataRepository.getVehicle("BMW").map(items => Ok(Json.toJson(items)))
-
-  }
+//  def findAll(): Action[AnyContent] = Action.async { implicit request =>
+//
+//    dataRepository.getVehicle("BMW").map(items => Ok(Json.toJson(items)))
+//
+//  }
 
 }
 

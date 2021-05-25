@@ -9,6 +9,8 @@ import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 
 import scala.concurrent.{ExecutionContext, Future}
+
+
 @Singleton
 class DataRepository @Inject()(mongoComponent: MongoComponent)(implicit ec: ExecutionContext) extends PlayMongoRepository[Vehicle](
   collectionName = "vehicles",
@@ -19,10 +21,13 @@ class DataRepository @Inject()(mongoComponent: MongoComponent)(implicit ec: Exec
   ))
 {
   // queries and updates can now be implemented with the available `collection: org.mongodb.scala.MongoCollection`
-  def findAll(): Future[Seq[Vehicle]] = collection.withReadPreference(ReadPreference.secondaryPreferred).find().toFuture().map(_.toList)
+  //def findAll(): Future[Seq[Vehicle]] = collection.withReadPreference(ReadPreference.secondaryPreferred).find().toFuture().map(_.toList)
+
   def create(vehicle: Vehicle) = collection.insertOne(vehicle).toFuture()
+
   def getVehicle(vehicleNameFromUrl: String)= collection.find(equal("name", vehicleNameFromUrl)).toFuture()
 }
+
 //import javax.inject.Singleton
 //import models.Vehicle
 //

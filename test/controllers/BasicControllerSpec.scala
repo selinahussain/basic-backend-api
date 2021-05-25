@@ -1,23 +1,21 @@
 package controllers
 
-import akka.actor.ActorSystem
-import akka.stream.{ActorMaterializer, Materializer}
 import models.Vehicle
 import org.mockito.ArgumentMatchers._
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{when}
 import org.scalatest.Matchers._
 import org.scalatestplus.mockito.MockitoSugar.mock
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.Play.materializer
 import play.api.http.Status
-import play.api.libs.json.{JsObject, JsValue, Json}
-import play.api.mvc.{ControllerComponents, Result}
-import play.api.test.{FakeHeaders, FakeRequest, Helpers, Injecting}
+import play.api.libs.json.{Json}
+import play.api.mvc.{ControllerComponents}
+import play.api.test.{FakeRequest, Injecting}
 import repositories.DataRepository
 import play.api.test.Helpers._
 
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future}
 
 class BasicControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
 
@@ -45,7 +43,7 @@ class BasicControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injectin
       "expected vehicle name submitted" in {
 
         when(mockDataRepository.getVehicle(any[String]))
-          .thenReturn(Some(dataModel))
+          .thenReturn(Future(Seq(dataModel)))
 
         val result = testController.getOneVehicle("BMW")(FakeRequest())
 
@@ -61,12 +59,11 @@ class BasicControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injectin
     "unexpected vehicle name submitted" in {
 
       when(mockDataRepository.getVehicle(any[String]))
-        .thenReturn(None)
+        .thenReturn(Future(Seq()))
 
       val result = testController.getOneVehicle("aahjhj")(FakeRequest())
       status(result) mustBe (Status.NOT_FOUND)
     }
-
 
   }
 
@@ -76,9 +73,9 @@ class BasicControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injectin
     "return Ok" when {
       "expected vehicle name received from POST method" in {
         when(mockDataRepository.getVehicle(any[String]))
-          .thenReturn(Some(dataModel))
+          .thenReturn(Future(Seq(dataModel)))
         val result = testController.receiveForm()(FakeRequest())
-        status(result) mustBe (Status.OK)
+        status(result) shouldBe (Status.OK)
         contentAsJson(result) shouldBe Json.toJson(dataModel)
       }
 
@@ -86,9 +83,9 @@ class BasicControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injectin
 
         "unexpected vehicle name is submitted" in {
           when(mockDataRepository.getVehicle(any[String]))
-            .thenReturn(None)
+            .thenReturn(Future(Seq()))
           val result = testController.receiveForm()(FakeRequest())
-          status(result) mustBe (Status.NOT_FOUND)
+          status(result) shouldBe (Status.INTERNAL_SERVER_ERROR)
         }
       }
 
