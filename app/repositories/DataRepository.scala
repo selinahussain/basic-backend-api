@@ -1,7 +1,7 @@
 package repositories
+
 import javax.inject.{Inject, Singleton}
 import models.Vehicle
-import org.mongodb.scala.ReadPreference
 import org.mongodb.scala.model.Filters.equal
 import org.mongodb.scala.model.{IndexModel, IndexOptions}
 import org.mongodb.scala.model.Indexes.ascending

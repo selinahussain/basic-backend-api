@@ -2,10 +2,10 @@ package controllers
 
 import models.Vehicle
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
-import play.api.mvc.Results.Ok
+
 
 import javax.inject.{Inject, Singleton}
-import play.api.mvc.{AbstractController, Action, AnyContent, BaseController, ControllerComponents, Request}
+import play.api.mvc.{Action, AnyContent, BaseController, ControllerComponents}
 import repositories.DataRepository
 
 import scala.concurrent.{ExecutionContext, Future}

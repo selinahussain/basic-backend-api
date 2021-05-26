@@ -7,7 +7,7 @@ import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import play.api.test.Injecting
 import uk.gov.hmrc.mongo.MongoComponent
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext}
 
 
 class DataRepositorySpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
