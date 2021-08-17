@@ -22,9 +22,6 @@ case class BasicController @Inject()(controllerComponents: ControllerComponents,
       case _ => NotFound("Vehicle not found")
     }
   }
-
-
-
   def receiveForm(): Action[AnyContent] = Action.async{implicit request =>
     val jsonReceived =request.body.asJson
 
@@ -42,7 +39,6 @@ case class BasicController @Inject()(controllerComponents: ControllerComponents,
     }
   }
 
-
   def create(): Action[JsValue] = Action.async(parse.json) { implicit request =>
     request.body.validate[Vehicle] match {
       case JsSuccess(vehicle, _) =>
@@ -50,13 +46,6 @@ case class BasicController @Inject()(controllerComponents: ControllerComponents,
       case JsError(_) => Future(BadRequest)
     }
   }
-
-//  def findAll(): Action[AnyContent] = Action.async { implicit request =>
-//
-//    dataRepository.getVehicle("BMW").map(items => Ok(Json.toJson(items)))
-//
-//  }
-
 }
 
 
