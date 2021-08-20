@@ -23,7 +23,6 @@ class BasicControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injectin
   implicit lazy val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   val mockDataRepository: DataRepository = mock[DataRepository]
 
-
   object testController extends BasicController(
     controllerComponents,
     mockDataRepository,

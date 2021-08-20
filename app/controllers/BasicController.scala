@@ -38,7 +38,6 @@ case class BasicController @Inject()(controllerComponents: ControllerComponents,
       ))
     }
   }
-
   def create(): Action[JsValue] = Action.async(parse.json) { implicit request =>
     request.body.validate[Vehicle] match {
       case JsSuccess(vehicle, _) =>
